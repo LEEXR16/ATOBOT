@@ -2,7 +2,7 @@
 
 > **Shared project file.** Single source of truth for progress, decisions and tasks.
 > Claude reads this at the start of every session and updates it after every step.
-> Last updated: **2026-10-01**
+> Last updated: **2026-10-05**
 
 ---
 
@@ -159,6 +159,7 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 | 2026-10-01 | CAN IDs swapped: **Ankle = 2, Toe = 1** (`config.h` JOINT_ID). GUI/command joint numbers unchanged (1 = ankle, 2 = toe). |
 | 2026-10-01 | **First hardware run** (COM9): both motors READY, zero, EN, POS working; MIT works without mode switch. Sine stopped after ~1 cycle. |
 | 2026-10-01 | **Bug fixed (fw 0.2):** `millis()` stamp 1 ms ahead of loop `now` wrapped `now - lastPcMs` → false PC timeout → HOLD. Same bug could make a POS move jump to its target in one step. All time stamps now use `loopNow`. Second test still showed fw 0.1 on the board → **re-upload needed**. Session paused. |
+| 2026-10-05 | Project put under git and pushed to GitHub: https://github.com/LEEXR16/ATOBOT (branch `main`). `__pycache__` ignored. |
 
 ## 7. Decisions
 
@@ -170,4 +171,5 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 | 2026-10-01 | Faults → motors limp; STOP / PC loss → hold | Limp is safest on a fault; a plain stop should not drop the limb |
 | 2026-10-01 | Manual ZERO per joint (limit-switch calibration later) | Joint may not be at 0° when powered |
 | 2026-10-01 | GUI uses QtSerialPort (no pyserial) + Simulator port | One less dependency; GUI testable without hardware |
+| 2026-10-05 | Code versioned on GitHub (LEEXR16/ATOBOT) | Backup + history |
 | 2026-10-01 | ASCII USB protocol | Same commands from GUI and Serial Monitor; bandwidth is not an issue |
