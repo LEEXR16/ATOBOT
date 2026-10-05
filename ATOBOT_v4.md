@@ -171,5 +171,5 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 | 2026-10-01 | Faults → motors limp; STOP / PC loss → hold | Limp is safest on a fault; a plain stop should not drop the limb |
 | 2026-10-01 | Manual ZERO per joint (limit-switch calibration later) | Joint may not be at 0° when powered |
 | 2026-10-01 | GUI uses QtSerialPort (no pyserial) + Simulator port | One less dependency; GUI testable without hardware |
-| 2026-10-05 | Code versioned on GitHub (LEEXR16/ATOBOT) | Backup + history |
 | 2026-10-01 | ASCII USB protocol | Same commands from GUI and Serial Monitor; bandwidth is not an issue |
+| 2026-10-05 | Code versioned on GitHub (LEEXR16/ATOBOT) | Backup + history |
