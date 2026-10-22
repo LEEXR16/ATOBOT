@@ -2,7 +2,7 @@
 
 > **Shared project file.** Single source of truth for progress, decisions and tasks.
 > Claude reads this at the start of every session and updates it after every step.
-> Last updated: **2026-10-05**
+> Last updated: **2026-10-22**
 
 ---
 
@@ -70,6 +70,7 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 - Centre: ankle / toe angle plots (target vs actual, ROM lines), torque plot
 - Right: Motors (enable/disable/zero/clear), Position, Sine, Gains, Record CSV, STOP (Esc)
 - Recordings: `Documents\ATOBOT\ATOBOT_<date>_<time>.csv`
+- Centre has tabs: **LIVE** (plots) / **GAME** (*Ankle Flyer*, `ui/game.py`): Flappy-Bird demo, bird height = joint angle; Hand mode (limp) or Robot mode (GUI sends POS per pipe). Header button **Play game / Back to live** switches tabs
 
 ---
 
@@ -137,6 +138,8 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 - [x] Live plots (angle/torque vs time)
 - [x] CSV data logging
 - [ ] Repeated ROM exercise (N cycles between two angles)
+- [x] Demo game "Ankle Flyer" in GUI (GAME tab) — tested in Simulator
+- [ ] Demo game: try on hardware (hand mode limp + robot mode) before the demo
 - [ ] Measure 48 V bus voltage (Teensy ADC + divider) → replace vbus = 0
 
 ### 🟢 Later — Phase 3: Impedance Control
@@ -160,6 +163,7 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 | 2026-10-01 | **First hardware run** (COM9): both motors READY, zero, EN, POS working; MIT works without mode switch. Sine stopped after ~1 cycle. |
 | 2026-10-01 | **Bug fixed (fw 0.2):** `millis()` stamp 1 ms ahead of loop `now` wrapped `now - lastPcMs` → false PC timeout → HOLD. Same bug could make a POS move jump to its target in one step. All time stamps now use `loopNow`. Second test still showed fw 0.1 on the board → **re-upload needed**. Session paused. |
 | 2026-10-05 | Project put under git and pushed to GitHub: https://github.com/LEEXR16/ATOBOT (branch `main`). `__pycache__` ignored. |
+| 2026-10-22 | **Demo game added** (GUI GAME tab, `ui/game.py`): Ankle Flyer for a bench demo to visiting professors. Simulator test: robot mode flies 40 s without crashing on Easy/Normal/Hard. Not yet tried on hardware. Header button "Play game / Back to live" added. |
 
 ## 7. Decisions
 
@@ -173,3 +177,4 @@ v4 is a simplification of v3 (capstan drive, see `../FAB/V3.x`, `../ARCHIVES`) w
 | 2026-10-01 | GUI uses QtSerialPort (no pyserial) + Simulator port | One less dependency; GUI testable without hardware |
 | 2026-10-01 | ASCII USB protocol | Same commands from GUI and Serial Monitor; bandwidth is not an issue |
 | 2026-10-05 | Code versioned on GitHub (LEEXR16/ATOBOT) | Backup + history |
+| 2026-10-22 | Demo game: bird height = joint angle (no gravity), lives in the existing GUI, no firmware change | Rehab-relevant (ROM targets), safe (hand mode = limp), robot mode reuses POS |

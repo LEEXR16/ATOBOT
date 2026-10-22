@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -26,6 +27,7 @@ from core.link import Link, LinkState, list_ports
 from core.model import Model
 from core.recorder import recordings_folder
 from ui import theme
+from ui.game import GamePanel
 from ui.plots import Series, TimePlot
 from ui.widgets import Card, SliderRow, StatusPill, ValueRow, hline
 
@@ -125,7 +127,7 @@ class MainWindow(QMainWindow):
         body.setContentsMargins(0, 0, 0, 0)
         body.setSpacing(0)
         body.addWidget(self._build_values())
-        body.addWidget(self._build_plots(), 1)
+        body.addWidget(self._build_centre(), 1)
         body.addWidget(self._build_controls())
         root.addLayout(body, 1)
 
@@ -162,6 +164,14 @@ class MainWindow(QMainWindow):
         for p in (self.stream_pill, self.mode_pill, self.fault_pill):
             lay.addWidget(p, 0, Qt.AlignVCenter)
         lay.addStretch()
+
+        self.game_btn = QPushButton("🎮  Play game")
+        self.game_btn.setObjectName("Ghost")
+        self.game_btn.setFocusPolicy(Qt.NoFocus)
+        self.game_btn.setToolTip("Switch between the Ankle Flyer game and the live plots")
+        self.game_btn.clicked.connect(self._toggle_game)
+        lay.addWidget(self.game_btn)
+        lay.addSpacing(12)
 
         self.port_box = QComboBox()
         self.refresh_btn = QPushButton("⟳")
@@ -201,6 +211,24 @@ class MainWindow(QMainWindow):
         lay.addWidget(log)
         lay.addStretch()
         return scroll
+
+    def _build_centre(self) -> QWidget:
+        self.tabs = QTabWidget()
+        self._plots_page = self._build_plots()
+        self.tabs.addTab(self._plots_page, "LIVE")
+        self.game = GamePanel(self.model, self.link, self._live)
+        self.tabs.addTab(self.game, "GAME")
+        self.tabs.currentChanged.connect(self._on_tab)
+        return self.tabs
+
+    def _toggle_game(self) -> None:
+        self.tabs.setCurrentWidget(self._plots_page if self.tabs.currentWidget() is self.game else self.game)
+
+    def _on_tab(self, _: int) -> None:
+        in_game = self.tabs.currentWidget() is self.game
+        self.game_btn.setText("📈  Back to live" if in_game else "🎮  Play game")
+        if in_game:
+            self.game.view.setFocus()
 
     def _build_plots(self) -> QWidget:
         w = QWidget()
@@ -409,6 +437,7 @@ class MainWindow(QMainWindow):
             self.link.send(P.cmd_gain(j, self.kp_spin[j].value(), self.kd_spin[j].value()))
 
     def emergency_stop(self) -> None:
+        self.game.halt()
         if self.link.is_connected:
             self.link.send("STOP")
 
